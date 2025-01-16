@@ -57,7 +57,7 @@
             // btnStart
             // 
             this.btnStart.Enabled = false;
-            this.btnStart.Location = new System.Drawing.Point(12, 79);
+            this.btnStart.Location = new System.Drawing.Point(12, 60);
             this.btnStart.Name = "btnStart";
             this.btnStart.Padding = new System.Windows.Forms.Padding(5);
             this.btnStart.Size = new System.Drawing.Size(325, 37);
@@ -72,7 +72,7 @@
             this.darkStatusStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkStatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.darkStatusStrip1.Location = new System.Drawing.Point(0, 474);
+            this.darkStatusStrip1.Location = new System.Drawing.Point(0, 515);
             this.darkStatusStrip1.Name = "darkStatusStrip1";
             this.darkStatusStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
             this.darkStatusStrip1.Size = new System.Drawing.Size(349, 24);
@@ -154,9 +154,9 @@
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.Black;
             this.richTextBox1.ForeColor = System.Drawing.Color.Lime;
-            this.richTextBox1.Location = new System.Drawing.Point(12, 153);
+            this.richTextBox1.Location = new System.Drawing.Point(12, 116);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(324, 303);
+            this.richTextBox1.Size = new System.Drawing.Size(324, 381);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
             // 
@@ -164,7 +164,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 498);
+            this.ClientSize = new System.Drawing.Size(349, 539);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.darkStatusStrip1);
             this.Controls.Add(this.darkMenuStrip1);

@@ -50,8 +50,8 @@ namespace GMLPretty
 
         void MakeItPretty(string fileNameSrc, string fileNameDest)
         {
+            XmlLine xmlLine = new XmlLine(2);
             int nodeLevel = 0;
-            //GMLNode node = new GMLNode("");
             int parentID = -1;
             bool emptyNode = false;
             bool isFeatureMember = false;
@@ -68,25 +68,35 @@ namespace GMLPretty
                     // znacznik początkowy
                     case XmlNodeType.Element:
                         elStart = xmlReader.Name;
-
+                        xmlLine.SetStartNode(xmlReader.Name);
+                        xmlLine.SetLevel(nodeLevel);
                         // poziom wcięcia...
                         nodeLevel++;
-
+                        Log(Tabs(nodeLevel, 2) + xmlReader.Name + "\n", Color.IndianRed);
                         // atrybuty
                         for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
                         {
                             xmlReader.MoveToAttribute(attInd);
                             Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
-                            // -- DB --
-                            //GMLAttribute attr = new GMLAttribute(node, xmlReader.Name, xmlReader.Value);
-                            //node.Attributes.Add(attr);
                         }
 
                         break;
 
                     // Deklaracja
                     case XmlNodeType.XmlDeclaration:
-                        line = xmlReader.Name;
+                        xmlLine.SetStartNode(xmlReader.Name);
+                        xmlLine.SetDeclaration();
+                        Log(Tabs(nodeLevel, 2) + "Deklaracja: " + xmlReader.Name + " " + xmlReader.Value + "\n");
+                        // atrybuty deklaracji
+                        for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
+                        {
+                            xmlReader.MoveToAttribute(attInd);
+                            xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
+                            Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
+                            line = xmlLine.GetXmlLine();
+                        }
+                        // ZAPIS LINII
+                        line = xmlLine.GetXmlLine();
 
                         break;
 
@@ -98,11 +108,9 @@ namespace GMLPretty
 
                     // znacznik końcowy
                     case XmlNodeType.EndElement:
-                        //node = DB_GetNode(node.ParentID);
-                        //parentID = node.ID;
                         nodeLevel--;
                         Log(Tabs(nodeLevel, 2) + "End Element " + xmlReader.Name + "\n" + Tabs(nodeLevel, 2) + 
-                            "Wracamy do <" + "node.Name" + ">" , Color.OrangeRed);
+                            "Wracamy do LVL<" + nodeLevel.ToString() + ">" , Color.OrangeRed);
                         string t = Tabs(nodeLevel, 2);
                         line = String.Concat(t, "<", elStart, " ", elParams, ">", elValue);
                         break;
@@ -137,8 +145,8 @@ namespace GMLPretty
         void Log(string txt)
         {
             richTextBox1.AppendText(txt);
-            //richTextBox1.ScrollToCaret();
-            //Application.DoEvents();
+            richTextBox1.ScrollToCaret();
+            Application.DoEvents();
         }
 
         void Log(string txt, Color color)
@@ -147,9 +155,9 @@ namespace GMLPretty
             richTextBox1.SelectionLength = 0;
             richTextBox1.SelectionColor = color;
             richTextBox1.AppendText(txt);
-            //richTextBox1.ScrollToCaret();
+            richTextBox1.ScrollToCaret();
             richTextBox1.SelectionColor = richTextBox1.ForeColor;
-            //Application.DoEvents();
+            Application.DoEvents();
         }
 
 
