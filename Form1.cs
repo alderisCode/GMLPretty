@@ -60,6 +60,7 @@ namespace GMLPretty
             string elEnd = "";
             string elParams = "";
             string elValue = "";
+            LastOperation lastOp = LastOperation.None;
             XmlReader xmlReader = XmlReader.Create(fileNameSrc);
             while (xmlReader.Read())
             {
@@ -67,9 +68,14 @@ namespace GMLPretty
                 {
                     // znacznik początkowy
                     case XmlNodeType.Element:
+                        if (lastOp == LastOperation.StartNode) 
+                        { 
+                            // Zapis do pliku
+                        }
                         elStart = xmlReader.Name;
                         xmlLine.SetStartNode(xmlReader.Name);
                         xmlLine.SetLevel(nodeLevel);
+                        lastOp = LastOperation.StartNode;
                         // poziom wcięcia...
                         nodeLevel++;
                         Log(Tabs(nodeLevel, 2) + xmlReader.Name + "\n", Color.IndianRed);
@@ -77,6 +83,7 @@ namespace GMLPretty
                         for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
                         {
                             xmlReader.MoveToAttribute(attInd);
+                            xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
                             Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
                         }
 
@@ -93,10 +100,11 @@ namespace GMLPretty
                             xmlReader.MoveToAttribute(attInd);
                             xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
                             Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
-                            line = xmlLine.GetXmlLine();
                         }
                         // ZAPIS LINII
                         line = xmlLine.GetXmlLine();
+                        Log(line + "\n", Color.White);
+                        xmlLine.Clear();
 
                         break;
 
@@ -110,14 +118,18 @@ namespace GMLPretty
                     case XmlNodeType.EndElement:
                         nodeLevel--;
                         Log(Tabs(nodeLevel, 2) + "End Element " + xmlReader.Name + "\n" + Tabs(nodeLevel, 2) + 
-                            "Wracamy do LVL<" + nodeLevel.ToString() + ">" , Color.OrangeRed);
+                            "Wracamy do LVL<" + nodeLevel.ToString() + ">\n" , Color.OrangeRed);
                         string t = Tabs(nodeLevel, 2);
                         line = String.Concat(t, "<", elStart, " ", elParams, ">", elValue);
+
+                        Log(xmlLine.GetXmlLine() + "\n", Color.White);
+                        xmlLine.Clear();
                         break;
 
                     // pusta linia
                     case XmlNodeType.Whitespace:
-                        Log(Tabs(nodeLevel, 2) + ".\n", Color.Gray);
+                        //Pomijamy puste linie
+                        //Log(Tabs(nodeLevel, 2) + ".\n", Color.Gray);
                         break;
 
                     default:

@@ -79,7 +79,7 @@ namespace GMLPretty
             }
             else if (startNode != "") 
             { 
-                line = String.Concat("<", startNode); 
+                line = String.Concat(Tabs() + "<", startNode); 
             }
             if (paramCount > 0)
             {
@@ -96,7 +96,7 @@ namespace GMLPretty
             if (value != "") 
             { 
                 // jeśli posiada wartość
-                line = String.Concat(">", value);
+                line = String.Concat(line, ">", value);
                 if (endNode != "")
                 {
                     line = String.Concat (line, "<", endNode, ">");
@@ -111,6 +111,16 @@ namespace GMLPretty
                 line = String.Concat(line, " />");
             }
             return line;
+        }
+
+
+        private string Tabs()
+        {
+            string tab = "";
+            string tabs = "";
+            for (int i = 0; i < tabSize; i++) { tab += " "; }
+            for (int i = 0; i < level; i++) { tabs += tab; }
+            return tabs;
         }
 
 
