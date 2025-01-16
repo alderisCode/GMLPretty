@@ -31,6 +31,7 @@
             this.btnOpen = new DarkUI.Controls.DarkButton();
             this.btnStart = new DarkUI.Controls.DarkButton();
             this.darkStatusStrip1 = new DarkUI.Controls.DarkStatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.darkMenuStrip1 = new DarkUI.Controls.DarkMenuStrip();
             this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otwórzToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,7 +39,7 @@
             this.zamknijToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.darkStatusStrip1.SuspendLayout();
             this.darkMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -71,13 +72,21 @@
             this.darkStatusStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkStatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.darkStatusStrip1.Location = new System.Drawing.Point(0, 128);
+            this.darkStatusStrip1.Location = new System.Drawing.Point(0, 474);
             this.darkStatusStrip1.Name = "darkStatusStrip1";
             this.darkStatusStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
             this.darkStatusStrip1.Size = new System.Drawing.Size(349, 24);
             this.darkStatusStrip1.SizingGrip = false;
             this.darkStatusStrip1.TabIndex = 3;
             this.darkStatusStrip1.Text = "darkStatusStrip1";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Font = new System.Drawing.Font("Segoe UI", 7.5F);
+            this.statusLabel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(55, 12);
+            this.statusLabel.Text = "Otwórz plik";
             // 
             // darkMenuStrip1
             // 
@@ -109,7 +118,7 @@
             this.otwórzToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.otwórzToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.otwórzToolStripMenuItem.Name = "otwórzToolStripMenuItem";
-            this.otwórzToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.otwórzToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.otwórzToolStripMenuItem.Text = "Otwórz...";
             this.otwórzToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -119,14 +128,14 @@
             this.toolStripMenuItem1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripMenuItem1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(118, 6);
             // 
             // zamknijToolStripMenuItem
             // 
             this.zamknijToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.zamknijToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
-            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.zamknijToolStripMenuItem_Click);
             // 
@@ -141,19 +150,22 @@
             // 
             this.saveFileDialog1.Filter = "Pliki GML|*.gml|Pliki XML|*.xml|Wszystkie pliki|*.*";
             // 
-            // statusLabel
+            // richTextBox1
             // 
-            this.statusLabel.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.statusLabel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(55, 12);
-            this.statusLabel.Text = "Otwórz plik";
+            this.richTextBox1.BackColor = System.Drawing.Color.Black;
+            this.richTextBox1.ForeColor = System.Drawing.Color.Lime;
+            this.richTextBox1.Location = new System.Drawing.Point(12, 153);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(324, 303);
+            this.richTextBox1.TabIndex = 5;
+            this.richTextBox1.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 152);
+            this.ClientSize = new System.Drawing.Size(349, 498);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.darkStatusStrip1);
             this.Controls.Add(this.darkMenuStrip1);
             this.Controls.Add(this.btnStart);
@@ -186,6 +198,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

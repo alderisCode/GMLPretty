@@ -76,7 +76,7 @@ namespace GMLPretty
                         for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
                         {
                             xmlReader.MoveToAttribute(attInd);
-                            //Log(Lvl(nodeLevel) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
+                            Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
                             // -- DB --
                             //GMLAttribute attr = new GMLAttribute(node, xmlReader.Name, xmlReader.Value);
                             //node.Attributes.Add(attr);
@@ -92,7 +92,7 @@ namespace GMLPretty
 
                     // tekst między znacznikami - value
                     case XmlNodeType.Text:
-                        //Log(Lvl(nodeLevel) + "Text Node: " + xmlReader.Value + "\n");
+                        Log(Tabs(nodeLevel, 2) + "Text Node: " + xmlReader.Value + "\n");
                         elValue = xmlReader.Value;
                         break;
 
@@ -101,19 +101,19 @@ namespace GMLPretty
                         //node = DB_GetNode(node.ParentID);
                         //parentID = node.ID;
                         nodeLevel--;
-                        //Log(Lvl(nodeLevel) + "End Element " + xmlReader.Name + "\n" + Lvl(nodeLevel) + 
-                        //    "Wracamy do <" + node.Name + ">" , Color.OrangeRed);
+                        Log(Tabs(nodeLevel, 2) + "End Element " + xmlReader.Name + "\n" + Tabs(nodeLevel, 2) + 
+                            "Wracamy do <" + "node.Name" + ">" , Color.OrangeRed);
                         string t = Tabs(nodeLevel, 2);
                         line = String.Concat(t, "<", elStart, " ", elParams, ">", elValue);
                         break;
 
                     // pusta linia
                     case XmlNodeType.Whitespace:
-                        //Log(Lvl(nodeLevel) + ".\n", Color.Gray);
+                        Log(Tabs(nodeLevel, 2) + ".\n", Color.Gray);
                         break;
 
                     default:
-                        //Log(Lvl(nodeLevel) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Cyan);
+                        Log(Tabs(nodeLevel, 2) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Cyan);
                         break;
 
                 }
@@ -133,6 +133,25 @@ namespace GMLPretty
             for (int i = 0; i < tabCount; i++) { tabs += tab; }
             return tabs;
         }
+
+        void Log(string txt)
+        {
+            richTextBox1.AppendText(txt);
+            //richTextBox1.ScrollToCaret();
+            //Application.DoEvents();
+        }
+
+        void Log(string txt, Color color)
+        {
+            richTextBox1.SelectionStart = richTextBox1.TextLength;
+            richTextBox1.SelectionLength = 0;
+            richTextBox1.SelectionColor = color;
+            richTextBox1.AppendText(txt);
+            //richTextBox1.ScrollToCaret();
+            richTextBox1.SelectionColor = richTextBox1.ForeColor;
+            //Application.DoEvents();
+        }
+
 
     }
 }
