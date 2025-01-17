@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace GMLPretty
 {
@@ -61,93 +63,99 @@ namespace GMLPretty
             string elParams = "";
             string elValue = "";
             LastOperation lastOp = LastOperation.None;
-            XmlReader xmlReader = XmlReader.Create(fileNameSrc);
-            while (xmlReader.Read())
+            using (var writer = new StreamWriter(fileNameDest))
             {
-                switch (xmlReader.NodeType)
+                XmlReader xmlReader = XmlReader.Create(fileNameSrc);
+                while (xmlReader.Read())
                 {
-                    // znacznik początkowy
-                    case XmlNodeType.Element:
-                        if (lastOp != LastOperation.None) 
-                        {
-                            Log(xmlLine.GetXmlLine() + "\n", Color.White);
+                    switch (xmlReader.NodeType)
+                    {
+                        // znacznik początkowy
+                        case XmlNodeType.Element:
+                            if (lastOp != LastOperation.None)
+                            {
+                                // Zapis do pliku
+                                line = xmlLine.GetXmlLine();
+                                if (line != "")
+                                {
+                                    writer.WriteLine(line);
+                                    Log(line + "\n", Color.White);
+                                    xmlLine.Clear();
+                                }
+                            }
+                            if (xmlReader.IsEmptyElement)
+                            {
+                                xmlLine.SetEmpty();
+                                if (lastOp == LastOperation.StartNode) nodeLevel++;
+                            }
+                            elStart = xmlReader.Name;
+                            xmlLine.SetStartNode(xmlReader.Name);
+                            xmlLine.SetLevel(nodeLevel);
+                            // poziom wcięcia...
+                            if (!xmlReader.IsEmptyElement) nodeLevel++;
+                            // atrybuty
+                            for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
+                            {
+                                xmlReader.MoveToAttribute(attInd);
+                                xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
+                            }
+                            if (xmlReader.IsEmptyElement)
+                                lastOp = LastOperation.EmptyNode;
+                            else
+                                lastOp = LastOperation.StartNode;
+                            break;
+
+                        // Deklaracja
+                        case XmlNodeType.XmlDeclaration:
+                            xmlLine.SetStartNode(xmlReader.Name);
+                            xmlLine.SetDeclaration();
+                            // atrybuty deklaracji
+                            for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
+                            {
+                                xmlReader.MoveToAttribute(attInd);
+                                xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
+                            }
+                            // ZAPIS LINII
+                            line = xmlLine.GetXmlLine();
+                            writer.WriteLine(line);
+                            Log(line + "\n", Color.White);
                             xmlLine.Clear();
-                            // Zapis do pliku
-                        }
-                        if (xmlReader.IsEmptyElement) 
-                        { 
-                            xmlLine.SetEmpty();
-                            Log(Tabs(nodeLevel, 2) + xmlReader.Name + " <-- EMPTY\n", Color.IndianRed);
-                        }
-                        elStart = xmlReader.Name;
-                        xmlLine.SetStartNode(xmlReader.Name);
-                        xmlLine.SetLevel(nodeLevel);
-                        lastOp = LastOperation.StartNode;
-                        // poziom wcięcia...
-                        nodeLevel++;
-                        Log(Tabs(nodeLevel, 2) + xmlReader.Name + "\n", Color.IndianRed);
-                        // atrybuty
-                        for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
-                        {
-                            xmlReader.MoveToAttribute(attInd);
-                            xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
-                            Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
-                        }
+                            lastOp = LastOperation.Declaration;
+                            break;
 
-                        break;
+                        // tekst między znacznikami - value
+                        case XmlNodeType.Text:
+                            xmlLine.SetValue(xmlReader.Value);
+                            elValue = xmlReader.Value;
+                            lastOp = LastOperation.Value;
+                            break;
 
-                    // Deklaracja
-                    case XmlNodeType.XmlDeclaration:
-                        xmlLine.SetStartNode(xmlReader.Name);
-                        xmlLine.SetDeclaration();
-                        Log(Tabs(nodeLevel, 2) + "Deklaracja: " + xmlReader.Name + " " + xmlReader.Value + "\n");
-                        // atrybuty deklaracji
-                        for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
-                        {
-                            xmlReader.MoveToAttribute(attInd);
-                            xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
-                            Log(Tabs(nodeLevel, 2) + "    - " + xmlReader.Name + " = " + xmlReader.Value + "\n", Color.Coral);
-                        }
-                        // ZAPIS LINII
-                        line = xmlLine.GetXmlLine();
-                        Log(line + "\n", Color.White);
-                        xmlLine.Clear();
+                        // znacznik końcowy
+                        case XmlNodeType.EndElement:
+                            xmlLine.SetEndNode(xmlReader.Name);
+                            line = xmlLine.GetXmlLine();
+                            writer.WriteLine(line);
+                            Log(line + "\n", Color.White);
+                            xmlLine.Clear();
+                            nodeLevel--;
+                            lastOp = LastOperation.EndNode;
+                            break;
 
-                        break;
+                        // pusta linia
+                        case XmlNodeType.Whitespace:
+                            //Pomijamy puste linie
+                            //lastOp = LastOperation.WhiteSpace;
+                            break;
 
-                    // tekst między znacznikami - value
-                    case XmlNodeType.Text:
-                        Log(Tabs(nodeLevel, 2) + "Text Node: " + xmlReader.Value + "\n");
-                        elValue = xmlReader.Value;
-                        break;
+                        default:
+                            Log(Tabs(nodeLevel, 2) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Cyan);
+                            break;
 
-                    // znacznik końcowy
-                    case XmlNodeType.EndElement:
-                        nodeLevel--;
-                        Log(Tabs(nodeLevel, 2) + "End Element " + xmlReader.Name + "\n" + Tabs(nodeLevel, 2) + 
-                            "Wracamy do LVL<" + nodeLevel.ToString() + ">\n" , Color.OrangeRed);
-                        string t = Tabs(nodeLevel, 2);
-                        line = String.Concat(t, "<", elStart, " ", elParams, ">", elValue);
-
-                        Log(xmlLine.GetXmlLine() + "\n", Color.White);
-                        xmlLine.Clear();
-                        break;
-
-                    // pusta linia
-                    case XmlNodeType.Whitespace:
-                        //Pomijamy puste linie
-                        //Log(Tabs(nodeLevel, 2) + ".\n", Color.Gray);
-                        break;
-
-                    default:
-                        Log(Tabs(nodeLevel, 2) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Cyan);
-                        break;
+                    }
 
                 }
-
+                writer.Close();
             }
-
-
 
         }
 

@@ -100,17 +100,22 @@ namespace GMLPretty
                 line = String.Concat(line, "?>");
                 return line;
             }
-            if (!isEmpty) 
-            { 
-                line = String.Concat(line, ">", value);
+            if (!isEmpty)
+            {
+
+                if (endNode == "")
+                {
+                    if (line == "" && value == "") { return ""; }
+                    line = String.Concat(line, ">");
+                }
+                else
+                {
+                    line = String.Concat(line, ">", value, "</", endNode, ">");
+                }
             }
             else
             {
                 line = String.Concat(line, " />", value);
-            }
-            if (endNode != "")
-            {
-                line = String.Concat(line, "<", endNode, ">");
             }
             
             return line;
