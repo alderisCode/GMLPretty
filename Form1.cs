@@ -68,9 +68,16 @@ namespace GMLPretty
                 {
                     // znacznik początkowy
                     case XmlNodeType.Element:
-                        if (lastOp == LastOperation.StartNode) 
-                        { 
+                        if (lastOp != LastOperation.None) 
+                        {
+                            Log(xmlLine.GetXmlLine() + "\n", Color.White);
+                            xmlLine.Clear();
                             // Zapis do pliku
+                        }
+                        if (xmlReader.IsEmptyElement) 
+                        { 
+                            xmlLine.SetEmpty();
+                            Log(Tabs(nodeLevel, 2) + xmlReader.Name + " <-- EMPTY\n", Color.IndianRed);
                         }
                         elStart = xmlReader.Name;
                         xmlLine.SetStartNode(xmlReader.Name);

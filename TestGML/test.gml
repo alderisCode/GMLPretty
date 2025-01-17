@@ -5,5 +5,6 @@
       <znacznik4 param4="treść-param4">wartość-zn4</znacznik4>
       <znacznik5 param5="treść-param5" param6="treść-param6" />
     </znacznik3>
+    <znacznik6 param7="treść-param7" />
   </znacznik2>
 </znacznik1>

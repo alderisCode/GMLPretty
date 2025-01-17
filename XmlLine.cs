@@ -17,6 +17,7 @@ namespace GMLPretty
         private int level = 0;
         private int tabSize = 2;
         private bool isDeclaration = false;
+        private bool isEmpty = false;
 
         public XmlLine(int tabSize) 
         { 
@@ -32,6 +33,7 @@ namespace GMLPretty
             value = "";
             level = 0;
             isDeclaration = false;
+            isEmpty = false;
         }
 
         public void SetStartNode(string node)
@@ -70,6 +72,11 @@ namespace GMLPretty
             this.isDeclaration = true; 
         } 
 
+        public void SetEmpty()
+        {
+            this.isEmpty = true;
+        }
+
         public string GetXmlLine()
         {
             string line = "";
@@ -93,23 +100,19 @@ namespace GMLPretty
                 line = String.Concat(line, "?>");
                 return line;
             }
-            if (value != "") 
+            if (!isEmpty) 
             { 
-                // jeśli posiada wartość
                 line = String.Concat(line, ">", value);
-                if (endNode != "")
-                {
-                    line = String.Concat (line, "<", endNode, ">");
-                }
-                else
-                {
-                    line = String.Concat(line, "</", endNode, ">");
-                }
             }
             else
             {
-                line = String.Concat(line, " />");
+                line = String.Concat(line, " />", value);
             }
+            if (endNode != "")
+            {
+                line = String.Concat(line, "<", endNode, ">");
+            }
+            
             return line;
         }
 
