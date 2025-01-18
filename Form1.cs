@@ -46,6 +46,7 @@ namespace GMLPretty
                 statusLabel.Text = "Zapisuję do nowego pliku...";
                 Application.DoEvents();
                 MakeItPretty(openFileDialog1.FileName, saveFileDialog1.FileName);
+                statusLabel.Text = "Zapis zakończony.";
             }
         }
 
@@ -54,14 +55,8 @@ namespace GMLPretty
         {
             XmlLine xmlLine = new XmlLine(2);
             int nodeLevel = 0;
-            int parentID = -1;
             bool emptyNode = false;
-            bool isFeatureMember = false;
             string line = "";
-            string elStart = "";
-            string elEnd = "";
-            string elParams = "";
-            string elValue = "";
             LastOperation lastOp = LastOperation.None;
             using (var writer = new StreamWriter(fileNameDest))
             {
@@ -79,27 +74,32 @@ namespace GMLPretty
                                 if (line != "")
                                 {
                                     writer.WriteLine(line);
-                                    Log(line + "\n", Color.White);
+                                    //Log(line + "\n", Color.White);
                                     xmlLine.Clear();
                                 }
                             }
+                            // poziom wcięcia...
+                            if (lastOp != LastOperation.EmptyNode && 
+                                lastOp != LastOperation.Declaration) 
+                                nodeLevel++;
                             if (xmlReader.IsEmptyElement)
                             {
                                 xmlLine.SetEmpty();
-                                if (lastOp == LastOperation.StartNode) nodeLevel++;
+                                emptyNode = true;
                             }
-                            elStart = xmlReader.Name;
+                            else 
+                            {
+                                emptyNode = false; 
+                            }
                             xmlLine.SetStartNode(xmlReader.Name);
                             xmlLine.SetLevel(nodeLevel);
-                            // poziom wcięcia...
-                            if (!xmlReader.IsEmptyElement) nodeLevel++;
                             // atrybuty
                             for (int attInd = 0; attInd < xmlReader.AttributeCount; attInd++)
                             {
                                 xmlReader.MoveToAttribute(attInd);
                                 xmlLine.AddParameter(xmlReader.Name, xmlReader.Value);
                             }
-                            if (xmlReader.IsEmptyElement)
+                            if (emptyNode)
                                 lastOp = LastOperation.EmptyNode;
                             else
                                 lastOp = LastOperation.StartNode;
@@ -118,7 +118,7 @@ namespace GMLPretty
                             // ZAPIS LINII
                             line = xmlLine.GetXmlLine();
                             writer.WriteLine(line);
-                            Log(line + "\n", Color.White);
+                            //Log(line + "\n", Color.White);
                             xmlLine.Clear();
                             lastOp = LastOperation.Declaration;
                             break;
@@ -126,16 +126,23 @@ namespace GMLPretty
                         // tekst między znacznikami - value
                         case XmlNodeType.Text:
                             xmlLine.SetValue(xmlReader.Value);
-                            elValue = xmlReader.Value;
                             lastOp = LastOperation.Value;
                             break;
 
                         // znacznik końcowy
                         case XmlNodeType.EndElement:
+                            if (lastOp==LastOperation.EmptyNode)
+                            {
+                                line = xmlLine.GetXmlLine();
+                                writer.WriteLine(line);
+                                xmlLine.Clear();
+                                nodeLevel--;
+                            }
                             xmlLine.SetEndNode(xmlReader.Name);
+                            xmlLine.SetLevel(nodeLevel);
                             line = xmlLine.GetXmlLine();
                             writer.WriteLine(line);
-                            Log(line + "\n", Color.White);
+                            //Log(line + "\n", Color.White);
                             xmlLine.Clear();
                             nodeLevel--;
                             lastOp = LastOperation.EndNode;

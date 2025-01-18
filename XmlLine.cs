@@ -110,7 +110,10 @@ namespace GMLPretty
                 }
                 else
                 {
-                    line = String.Concat(line, ">", value, "</", endNode, ">");
+                    if (line == "")
+                        line = String.Concat(Tabs(), "</", endNode, ">");
+                    else
+                        line = String.Concat(line, ">", value, "</", endNode, ">");
                 }
             }
             else
