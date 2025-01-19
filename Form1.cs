@@ -30,6 +30,7 @@ namespace GMLPretty
             {
                 //openFileDialog1.FileName;
                 btnStart.Enabled = true;
+                statusLabel.Text = "Wczytano: " + Path.GetFileName(openFileDialog1.FileName);
             }
         }
 
@@ -63,6 +64,23 @@ namespace GMLPretty
                 XmlReader xmlReader = XmlReader.Create(fileNameSrc);
                 while (xmlReader.Read())
                 {
+                    //jeśli to koniec komentarza
+                    if (xmlReader.NodeType != XmlNodeType.Comment && lastOp == LastOperation.Comment) 
+                    {
+                        if (xmlLine.CommCount() > 0 )
+                        {
+                            for (int i=0;  i < xmlLine.CommCount(); i++)
+                            {
+                                if (xmlLine.GetComment(i).Contains("\n"))
+                                    writer.WriteLine(String.Concat("<!--", xmlLine.GetComment(0), "-->"));
+                                else
+                                    writer.WriteLine(String.Concat(xmlLine.Tabs(), "<!--", xmlLine.GetComment(0), "-->"));
+                            }
+                        }
+                        xmlLine.Clear();
+                    }
+                    
+                    //jeśli to cokolwiek innego niż komentarz
                     switch (xmlReader.NodeType)
                     {
                         // znacznik początkowy
@@ -74,22 +92,21 @@ namespace GMLPretty
                                 if (line != "")
                                 {
                                     writer.WriteLine(line);
-                                    //Log(line + "\n", Color.White);
                                     xmlLine.Clear();
                                 }
                             }
                             // poziom wcięcia...
-                            if (lastOp != LastOperation.EmptyNode && 
-                                lastOp != LastOperation.Declaration) 
+                            if (lastOp != LastOperation.EmptyNode &&
+                                lastOp != LastOperation.Declaration)
                                 nodeLevel++;
                             if (xmlReader.IsEmptyElement)
                             {
                                 xmlLine.SetEmpty();
                                 emptyNode = true;
                             }
-                            else 
+                            else
                             {
-                                emptyNode = false; 
+                                emptyNode = false;
                             }
                             xmlLine.SetStartNode(xmlReader.Name);
                             xmlLine.SetLevel(nodeLevel);
@@ -118,7 +135,6 @@ namespace GMLPretty
                             // ZAPIS LINII
                             line = xmlLine.GetXmlLine();
                             writer.WriteLine(line);
-                            //Log(line + "\n", Color.White);
                             xmlLine.Clear();
                             lastOp = LastOperation.Declaration;
                             break;
@@ -131,7 +147,7 @@ namespace GMLPretty
 
                         // znacznik końcowy
                         case XmlNodeType.EndElement:
-                            if (lastOp==LastOperation.EmptyNode)
+                            if (lastOp == LastOperation.EmptyNode)
                             {
                                 line = xmlLine.GetXmlLine();
                                 writer.WriteLine(line);
@@ -154,8 +170,23 @@ namespace GMLPretty
                             //lastOp = LastOperation.WhiteSpace;
                             break;
 
+                        case XmlNodeType.Comment:
+                            if (lastOp != LastOperation.Comment)
+                            {
+                                // ZAPIS LINII
+                                line = xmlLine.GetXmlLine();
+                                if (line != "")
+                                {
+                                    writer.WriteLine(line);
+                                    xmlLine.Clear();
+                                }
+                            }
+                            xmlLine.AddComment(xmlReader.Value);
+                            lastOp = LastOperation.Comment;
+                            break;
+
                         default:
-                            Log(Tabs(nodeLevel, 2) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Cyan);
+                            Log(Tabs(nodeLevel, 2) + "Other node " + xmlReader.NodeType + " with value " + xmlReader.Value + "\n", Color.Lime);
                             break;
 
                     }

@@ -15,6 +15,7 @@ namespace GMLPretty
         Value = 4,
         WhiteSpace = 5,
         EmptyNode = 6,
+        Comment= 7,
         Other = 100
     }
 }

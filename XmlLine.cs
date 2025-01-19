@@ -18,6 +18,8 @@ namespace GMLPretty
         private int tabSize = 2;
         private bool isDeclaration = false;
         private bool isEmpty = false;
+        private List<string> comments = new List<string>();
+        private int commCount = 0;
 
         public XmlLine(int tabSize) 
         { 
@@ -34,6 +36,8 @@ namespace GMLPretty
             level = 0;
             isDeclaration = false;
             isEmpty = false;
+            comments.Clear();
+            commCount = 0;
         }
 
         public void SetStartNode(string node)
@@ -76,6 +80,23 @@ namespace GMLPretty
         {
             this.isEmpty = true;
         }
+
+        public void AddComment(string comment)
+        {
+            this.comments.Add(comment);
+            this.commCount++;
+        }
+
+        public string GetComment(int index)
+        {
+            return this.comments[index];
+        }
+
+        public int CommCount() { return this.commCount; }
+
+
+
+        // ----------------------------------------------------------------
 
         public string GetXmlLine()
         {
@@ -125,7 +146,7 @@ namespace GMLPretty
         }
 
 
-        private string Tabs()
+        public string Tabs()
         {
             string tab = "";
             string tabs = "";
