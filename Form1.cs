@@ -42,8 +42,8 @@ namespace GMLPretty
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK) 
-            { 
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
                 statusLabel.Text = "Zapisuję do nowego pliku...";
                 Application.DoEvents();
                 MakeItPretty(openFileDialog1.FileName, saveFileDialog1.FileName);
@@ -65,11 +65,11 @@ namespace GMLPretty
                 while (xmlReader.Read())
                 {
                     //jeśli to koniec komentarza
-                    if (xmlReader.NodeType != XmlNodeType.Comment && lastOp == LastOperation.Comment) 
+                    if (xmlReader.NodeType != XmlNodeType.Comment && lastOp == LastOperation.Comment)
                     {
-                        if (xmlLine.CommCount() > 0 )
+                        if (xmlLine.CommCount() > 0)
                         {
-                            for (int i=0;  i < xmlLine.CommCount(); i++)
+                            for (int i = 0; i < xmlLine.CommCount(); i++)
                             {
                                 if (xmlLine.GetComment(i).Contains("\n"))
                                     writer.WriteLine(String.Concat("<!--", xmlLine.GetComment(0), "-->"));
@@ -79,7 +79,7 @@ namespace GMLPretty
                         }
                         xmlLine.Clear();
                     }
-                    
+
                     //jeśli to cokolwiek innego niż komentarz
                     switch (xmlReader.NodeType)
                     {
@@ -224,7 +224,6 @@ namespace GMLPretty
             richTextBox1.SelectionColor = richTextBox1.ForeColor;
             Application.DoEvents();
         }
-
 
     }
 }

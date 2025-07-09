@@ -113,7 +113,7 @@ namespace GMLPretty
             {
                 foreach (XmlParameter p in paramList)
                 {
-                    line = String.Concat(line, " ", p.Name, "=\"", p.Value, "\"");
+                    line = String.Concat(line, " ", SetSpecialSigns(p.Name), "=\"", SetSpecialSigns(p.Value), "\"");
                 }
             }
             if (isDeclaration)
@@ -134,12 +134,12 @@ namespace GMLPretty
                     if (line == "")
                         line = String.Concat(Tabs(), "</", endNode, ">");
                     else
-                        line = String.Concat(line, ">", value, "</", endNode, ">");
+                        line = String.Concat(line, ">", SetSpecialSigns(value), "</", endNode, ">");
                 }
             }
             else
             {
-                line = String.Concat(line, " />", value);
+                line = String.Concat(line, " />", SetSpecialSigns(value));
             }
             
             return line;
@@ -154,6 +154,18 @@ namespace GMLPretty
             for (int i = 0; i < level; i++) { tabs += tab; }
             return tabs;
         }
+
+        private string SetSpecialSigns(string text)
+        {
+            if (text == null) return "";
+            text = text.Replace("&", "&amp;");
+            text = text.Replace("<", "&lt;");
+            text = text.Replace(">", "&gt;");
+            text = text.Replace("\"", "&quot;");
+            text = text.Replace("'", "&apos;");
+            return text;
+        }
+
 
 
 

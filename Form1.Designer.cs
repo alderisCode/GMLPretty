@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.darkStatusStrip1 = new DarkUI.Controls.DarkStatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.darkMenuStrip1 = new DarkUI.Controls.DarkMenuStrip();
@@ -97,7 +98,7 @@
             this.otwórzToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.otwórzToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.otwórzToolStripMenuItem.Name = "otwórzToolStripMenuItem";
-            this.otwórzToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.otwórzToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.otwórzToolStripMenuItem.Text = "Otwórz...";
             this.otwórzToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -107,14 +108,14 @@
             this.toolStripMenuItem1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripMenuItem1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(118, 6);
             // 
             // zamknijToolStripMenuItem
             // 
             this.zamknijToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.zamknijToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.zamknijToolStripMenuItem.Name = "zamknijToolStripMenuItem";
-            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zamknijToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.zamknijToolStripMenuItem.Text = "Zamknij";
             this.zamknijToolStripMenuItem.Click += new System.EventHandler(this.zamknijToolStripMenuItem_Click);
             // 
@@ -179,6 +180,7 @@
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.btnOpen);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.darkMenuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
