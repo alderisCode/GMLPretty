@@ -225,5 +225,10 @@ namespace GMLPretty
             Application.DoEvents();
         }
 
+        private void oProgramieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.ShowDialog();
+        }
     }
 }
