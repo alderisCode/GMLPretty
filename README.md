@@ -14,6 +14,12 @@ oraz zainstalowane w systemie środowisko uruchomieniowe .NET w wersji minimum 4
 
 ---
 
+# Licencja
+
+Ten projekt objęty jest licencją GNU-GPL 3.0
+
+---
+
 # Kontakt
 
 E-mail: golszewski@powiatopolski.pl
