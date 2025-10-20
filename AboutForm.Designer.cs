@@ -148,6 +148,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "O programie";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

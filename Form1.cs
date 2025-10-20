@@ -22,6 +22,10 @@ namespace GMLPretty
         public Form1()
         {
             InitializeComponent();
+            // Włączanie przeciągania plików bez modyfikacji Designer.cs
+            this.AllowDrop = true;
+            this.DragEnter += Form1_DragEnter;
+            this.DragDrop += Form1_DragDrop;
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -42,6 +46,10 @@ namespace GMLPretty
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            var newFileName = Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + "_pretty" + Path.GetExtension(openFileDialog1.FileName);
+            saveFileDialog1.FileName = newFileName;
+            var folder = Path.GetDirectoryName(openFileDialog1.FileName);
+            saveFileDialog1.InitialDirectory = folder;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 statusLabel.Text = "Zapisuję do nowego pliku...";
@@ -230,5 +238,53 @@ namespace GMLPretty
             AboutForm aboutForm = new AboutForm();
             aboutForm.ShowDialog();
         }
+
+        private void zawszeNaWierzchu_Click(object sender, EventArgs e)
+        {
+            zawszeNaWierzchuToolStripMenuItem.Checked = !zawszeNaWierzchuToolStripMenuItem.Checked;
+            if (zawszeNaWierzchuToolStripMenuItem.Checked)
+            {
+                this.TopMost = true;
+            }
+            else
+            {
+                this.TopMost = false;
+            }
+        }
+
+        // Obsługa Drag & Drop --------------------------------------------------
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files != null && files.Length > 0 && File.Exists(files[0]))
+                    e.Effect = DragDropEffects.Copy;
+                else
+                    e.Effect = DragDropEffects.None;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files != null && files.Length > 0)
+                {
+                    var file = files[0];
+                    // ustaw plik jako wybrany w OpenFileDialog (używane w istniejącym przepływie aplikacji)
+                    openFileDialog1.FileName = file;
+                    btnStart.Enabled = true;
+                    statusLabel.Text = "Wczytano: " + Path.GetFileName(file);
+                }
+            }
+        }
+
     }
 }

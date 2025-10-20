@@ -17,7 +17,7 @@ namespace GMLPretty
 
 
         string appName = "GML Pretty";
-        string version = "1.0.0";
+        string version = "1.1.0";
         string author = "(C) 2025 Grzegorz Olszewski\nStarostwo Powiatowe w Opolu";
         string copyright = "Licencja: GNU GPL 3";
         string link = "https://github.com/alderisCode/GMLPretty";
